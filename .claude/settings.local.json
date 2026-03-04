@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer require livewire/livewire openai-php/client)",
+      "Bash(php artisan migrate)",
+      "Bash(php artisan config:clear)",
+      "Bash(php artisan route:list)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(php artisan tinker --execute=\":*)",
+      "Bash(composer require anthropic-ai/sdk)",
+      "Bash(xargs grep -l \"content_block_delta\\\\|tool_use\\\\|input_json\")",
+      "Bash(php -r \":*)"
+    ]
+  }
+}
