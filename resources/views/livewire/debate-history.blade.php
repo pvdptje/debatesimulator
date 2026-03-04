@@ -1,37 +1,64 @@
 <div>
-    <div class="flex items-center justify-between mb-8">
-        <h1 class="text-3xl font-bold">Debate History</h1>
-        <a href="{{ route('home') }}" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+    {{-- ── Header ── --}}
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.25rem;">
+        <h1 style="font-family: var(--font-display); font-size: 3.2rem; letter-spacing: -0.03em; color: #fff;">
+            History
+        </h1>
+        <a href="{{ route('home') }}"
+            style="display: inline-flex; align-items: center; gap: 0.4rem; background: var(--ht-accent); color: #fff; font-size: 0.82rem; font-weight: 600; padding: 0.6rem 1.15rem; border-radius: 9px; text-decoration: none; transition: all 0.2s; box-shadow: 0 0 16px var(--ht-accent-glow);"
+            onmouseover="this.style.filter='brightness(1.15)'"
+            onmouseout="this.style.filter='brightness(1)'"
+        >
             + New Debate
         </a>
     </div>
 
     @if($debates->isEmpty())
-    <div class="text-center py-16 text-gray-500">
-        <p class="text-lg mb-2">No debates yet.</p>
-        <a href="{{ route('home') }}" class="text-blue-400 hover:underline text-sm">Start one →</a>
+    {{-- ── Empty state ── --}}
+    <div style="text-align: center; padding: 5rem 0;">
+        <p style="font-family: var(--font-display); font-size: 1.5rem; color: var(--ht-text-muted); margin-bottom: 0.6rem;">
+            No debates yet.
+        </p>
+        <a href="{{ route('home') }}"
+            style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--ht-accent); text-decoration: none; transition: opacity 0.2s;"
+            onmouseover="this.style.opacity='0.75'"
+            onmouseout="this.style.opacity='1'"
+        >
+            Start one &#8594;
+        </a>
     </div>
     @else
-    <div class="space-y-3">
+    {{-- ── Debate list ── --}}
+    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
         @foreach($debates as $debate)
-        <a href="{{ route('debate.room', $debate->id) }}" class="block bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-600 rounded-xl px-5 py-4 transition group">
-            <div class="flex items-start justify-between gap-4">
-                <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-white group-hover:text-blue-300 transition truncate">{{ $debate->topic }}</p>
-                    <p class="text-gray-500 text-xs mt-1">
+        <a href="{{ route('debate.room', $debate->id) }}"
+            style="display: block; background: var(--ht-surface); border: 1px solid var(--ht-border); border-radius: 12px; padding: 1.15rem 1.3rem; text-decoration: none; transition: all 0.2s;"
+            onmouseover="this.style.borderColor='var(--ht-border-hi)'; this.style.background='var(--ht-surface-2)'"
+            onmouseout="this.style.borderColor='var(--ht-border)'; this.style.background='var(--ht-surface)'"
+        >
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;">
+                <div style="flex: 1; min-width: 0;">
+                    <p style="font-size: 0.95rem; font-weight: 600; color: #fff; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color 0.2s;">
+                        {{ $debate->topic }}
+                    </p>
+                    <p style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--ht-text-muted); margin: 0.4rem 0 0;">
                         {{ $debate->agents_count }} agents
-                        &nbsp;·&nbsp;
+                        <span style="opacity: 0.35; margin: 0 0.25rem;">&middot;</span>
                         {{ $debate->messages_count }} messages
-                        &nbsp;·&nbsp;
+                        <span style="opacity: 0.35; margin: 0 0.25rem;">&middot;</span>
                         {{ $debate->current_round }} rounds
-                        &nbsp;·&nbsp;
+                        <span style="opacity: 0.35; margin: 0 0.25rem;">&middot;</span>
                         {{ $debate->created_at->diffForHumans() }}
                     </p>
                 </div>
-                <span class="flex-shrink-0 text-xs font-medium px-2.5 py-1 rounded-full
-                    @if($debate->status === 'active') bg-green-500/20 text-green-400
-                    @elseif($debate->status === 'finished') bg-gray-700 text-gray-400
-                    @else bg-yellow-500/20 text-yellow-400 @endif
+                <span style="flex-shrink: 0; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; padding: 0.2rem 0.6rem; border-radius: 999px;
+                    @if($debate->status === 'active')
+                        background: rgba(34, 197, 94, 0.1); color: var(--ht-green); border: 1px solid rgba(34, 197, 94, 0.2);
+                    @elseif($debate->status === 'finished')
+                        background: var(--ht-surface-2); color: var(--ht-text-muted); border: 1px solid var(--ht-border);
+                    @else
+                        background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2);
+                    @endif
                 ">
                     {{ $debate->status }}
                 </span>

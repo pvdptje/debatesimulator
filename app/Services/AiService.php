@@ -202,12 +202,13 @@ class AiService
             ? "You CANNOT call end_debate yet. The debate requires at least {$minRounds} rounds and only {$debate->current_round} have completed. Keep attacking."
             : "You may call end_debate if you've clearly won, the opposition has embarrassed themselves, or continuing is beneath you.";
 
+        $mode = $debate->mode ?? 'heated';
+        $modePrompt = config("debate_modes.{$mode}.prompt", config('debate_modes.heated.prompt'));
+
         $systemPrompt = "You are {$agent->name}, a {$agent->role}.\n"
             . "You firmly believe: {$agent->stance}\n"
             . "The debate topic is: {$debate->topic}\n"
-            . "You are in a live, heated debate. You are opinionated, combative, and here to WIN — not to find common ground. "
-            . "Be blunt and dismissive. Attack the weakest point in the last argument. "
-            . "STRICT LENGTH RULE: 2-3 sentences maximum. Hard limit. No exceptions. No padding, no preamble, no summaries.\n"
+            . $modePrompt . "\n"
             . $killSwitchLine;
 
         $history = $debate->messages()

@@ -9,7 +9,8 @@
       "Bash(php artisan tinker --execute=\":*)",
       "Bash(composer require anthropic-ai/sdk)",
       "Bash(xargs grep -l \"content_block_delta\\\\|tool_use\\\\|input_json\")",
-      "Bash(php -r \":*)"
+      "Bash(php -r \":*)",
+      "Bash(php artisan make:migration add_mode_to_debates_table --table=debates)"
     ]
   }
 }

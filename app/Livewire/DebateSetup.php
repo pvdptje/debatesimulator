@@ -11,6 +11,7 @@ class DebateSetup extends Component
 {
     public string $topic = '';
     public int $minRounds = 5;
+    public string $mode = 'heated';
 
     // Current agent form fields
     public string $agentName = '';
@@ -23,6 +24,15 @@ class DebateSetup extends Component
     public array $agents = [];
     public bool $generating = false;
     public ?string $generateError = null;
+
+    // Inline edit state
+    public ?int $editingIndex = null;
+    public string $editName = '';
+    public string $editRole = '';
+    public string $editStance = '';
+    public string $editProvider = 'anthropic';
+    public string $editModel = '';
+    public string $editColor = '';
 
     private const DEFAULT_COLORS = ['#3B82F6', '#EF4444', '#22C55E', '#A855F7'];
 
@@ -37,6 +47,11 @@ class DebateSetup extends Component
     {
         $models = $this->getModelsForProvider($this->agentProvider);
         $this->agentModel = $models[0] ?? '';
+    }
+
+    public function getModes(): array
+    {
+        return config('debate_modes', []);
     }
 
     public function getProviders(): array
@@ -90,7 +105,7 @@ class DebateSetup extends Component
                         'role'    => 'user',
                         'content' => "Cast 2 to 4 debate contestants for this topic: \"{$this->topic}\"\n\n"
                             . "NAME RULES — this is the most important part:\n"
-                            . "- Use realistic, ordinary human names. Think: 'James Whitfield', 'Sarah Okonkwo', 'Chen Wei', 'Maria Santos'.\n"
+                            . "- Use realistic, ordinary human names — diverse in ethnicity and gender, matching the debate context. Do NOT reuse example names.\n"
                             . "- NEVER use names like 'Dr. Vex', 'Professor Orion Bright', 'Rex Carbon', 'Maximilian Byte', 'Oracle Nix' or any other made-up villain/fantasy names.\n"
                             . "- Titles (Dr., Professor, General, Senator etc.) are fine but the surname must sound like a real person.\n\n"
                             . "OTHER RULES:\n"
@@ -209,6 +224,58 @@ class DebateSetup extends Component
         $this->agentColor = self::DEFAULT_COLORS[count($this->agents) % count(self::DEFAULT_COLORS)];
     }
 
+    public function editAgent(int $index): void
+    {
+        $agent = $this->agents[$index] ?? null;
+        if (!$agent) return;
+
+        $this->editingIndex = $index;
+        $this->editName     = $agent['name'];
+        $this->editRole     = $agent['role'];
+        $this->editStance   = $agent['stance'];
+        $this->editProvider = $agent['provider'];
+        $this->editModel    = $agent['model'];
+        $this->editColor    = $agent['color'];
+    }
+
+    public function updatedEditProvider(): void
+    {
+        $models = $this->getModelsForProvider($this->editProvider);
+        $this->editModel = $models[0] ?? '';
+    }
+
+    public function saveAgent(): void
+    {
+        $this->validate([
+            'editName'     => 'required|string|max:100',
+            'editRole'     => 'required|string|max:100',
+            'editStance'   => 'required|string|max:500',
+            'editProvider' => 'required|string',
+            'editModel'    => 'required|string',
+        ]);
+
+        if ($this->editingIndex === null || !isset($this->agents[$this->editingIndex])) return;
+
+        $this->agents[$this->editingIndex] = array_merge(
+            $this->agents[$this->editingIndex],
+            [
+                'name'     => $this->editName,
+                'role'     => $this->editRole,
+                'stance'   => $this->editStance,
+                'provider' => $this->editProvider,
+                'model'    => $this->editModel,
+                'color'    => $this->editColor,
+            ]
+        );
+
+        $this->editingIndex = null;
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->editingIndex = null;
+    }
+
     public function removeAgent(int $index): void
     {
         array_splice($this->agents, $index, 1);
@@ -233,6 +300,7 @@ class DebateSetup extends Component
             'topic'      => $this->topic,
             'status'     => 'active',
             'min_rounds' => $this->minRounds,
+            'mode'       => $this->mode,
         ]);
 
         foreach ($this->agents as $agentData) {
@@ -250,6 +318,7 @@ class DebateSetup extends Component
         return view('livewire.debate-setup', [
             'providers'       => $this->getProviders(),
             'availableModels' => $this->getAvailableModelsProperty(),
+            'modes'           => $this->getModes(),
         ])->layout('layouts.app');
     }
 }
