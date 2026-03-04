@@ -224,6 +224,17 @@
         .ht-main > *:nth-child(3) { animation-delay: 0.15s; }
         .ht-main > *:nth-child(4) { animation-delay: 0.2s; }
 
+        /* ── Mobile overrides ── */
+        @media (max-width: 640px) {
+            html, body { height: auto !important; min-height: 100dvh; }
+            .ht-main { flex: none; min-height: auto; padding: 1.25rem 1rem 2rem; }
+            .debate-room { flex: none !important; min-height: auto !important; padding-bottom: 1.25rem !important; }
+            .debate-chat { overflow-y: visible !important; height: auto !important; flex: none !important; min-height: auto !important; padding-right: 0 !important; }
+            .debate-header h1 { font-size: 1.35rem !important; }
+            .debate-header-meta { gap: 0.35rem !important; }
+            .msg-model { display: none !important; }
+        }
+
         /* ── Footer ── */
         .ht-footer {
             border-top: 1px solid var(--ht-border);

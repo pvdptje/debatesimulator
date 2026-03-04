@@ -93,6 +93,8 @@ class DebateSetup extends Component
                 $providerModelLines .= "  - provider=\"$p\": models are $models\n";
             }
 
+            $contestantCount = rand(2, 4);
+
             $response = $client->chat()->create([
                 'model' => 'gpt-4o-mini',
                 'response_format' => ['type' => 'json_object'],
@@ -103,7 +105,7 @@ class DebateSetup extends Component
                     ],
                     [
                         'role'    => 'user',
-                        'content' => "Cast 2 to 4 debate contestants for this topic: \"{$this->topic}\"\n\n"
+                        'content' => "Cast exactly {$contestantCount} debate contestants for this topic: \"{$this->topic}\"\n\n"
                             . "NAME RULES — this is the most important part:\n"
                             . "- Use realistic, ordinary human names — diverse in ethnicity and gender, matching the debate context. Do NOT reuse example names.\n"
                             . "- NEVER use names like 'Dr. Vex', 'Professor Orion Bright', 'Rex Carbon', 'Maximilian Byte', 'Oracle Nix' or any other made-up villain/fantasy names.\n"

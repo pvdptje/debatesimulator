@@ -1,4 +1,5 @@
 <div
+    class="debate-room"
     style="display: flex; flex-direction: column; flex: 1; min-height: 0; padding-bottom: 2rem;"
     x-data="{ started: false }"
     x-init="
@@ -10,12 +11,12 @@
     @debate-ended.window="document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight"
 >
     {{-- ── Header ── --}}
-    <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; flex-shrink: 0;">
-        <div>
+    <div class="debate-header" style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; flex-shrink: 0;">
+        <div style="min-width: 0; flex: 1;">
             <h1 style="font-family: var(--font-display); font-size: 1.75rem; color: #fff; letter-spacing: -0.02em; line-height: 1.2;">
                 {{ $debate->topic }}
             </h1>
-            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.65rem;">
+            <div class="debate-header-meta" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.65rem;">
                 @php $modeConfig = config('debate_modes.' . ($debate->mode ?? 'heated')); @endphp
                 {{-- Mode badge --}}
                 <span style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; background: var(--ht-surface-2); border: 1px solid var(--ht-border); border-radius: 6px; padding: 0.25rem 0.55rem; color: var(--ht-text-dim);">
@@ -71,6 +72,7 @@
     {{-- ── Chat container ── --}}
     <div
         id="chat-container"
+        class="debate-chat"
         style="flex: 1; min-height: 0; overflow-y: scroll; padding-right: 0.75rem; scroll-behavior: smooth;"
     >
         <div style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -95,7 +97,7 @@
                     <span style="font-weight: 600; font-size: 0.9rem; color: #fff;">{{ $agent->name }}</span>
                     <span style="font-size: 0.78rem; color: var(--ht-text-muted);">{{ $agent->role }}</span>
                     <span style="color: var(--ht-text-muted); font-size: 0.6rem;">&middot;</span>
-                    <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--ht-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 14rem;">{{ $agent->model }}</span>
+                    <span class="msg-model" style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--ht-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 14rem;">{{ $agent->model }}</span>
                     <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--ht-text-muted); margin-left: auto; flex-shrink: 0; font-variant-numeric: tabular-nums;">R{{ $message->round + 1 }}</span>
                 </div>
                 {{-- Bubble --}}
