@@ -26,7 +26,7 @@
                 >
             </div>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
+        <div class="topic-row" style="display: flex; gap: 0.75rem;">
             <input
                 wire:model="topic"
                 type="text"

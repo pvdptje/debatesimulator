@@ -233,6 +233,8 @@
             .debate-header h1 { font-size: 1.35rem !important; }
             .debate-header-meta { gap: 0.35rem !important; }
             .msg-model { display: none !important; }
+            .topic-row { flex-direction: column !important; }
+            .topic-row button { width: 100% !important; justify-content: center !important; }
         }
 
         /* ── Footer ── */
